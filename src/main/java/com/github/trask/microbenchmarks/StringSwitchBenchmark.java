@@ -16,7 +16,6 @@
 package com.github.trask.microbenchmarks;
 
 import java.util.concurrent.TimeUnit;
-
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -174,4 +173,121 @@ public class StringSwitchBenchmark {
         }
         throw new AssertionError();
     }
+
+    @Benchmark
+    public long smallSwitchFirstChar() {
+        String test = new String(chars);
+        switch (test.charAt(0)) {
+            case 'a':
+                if ("aaaaa".equals(test)) {
+                    return 1;
+                }
+                break;
+            case 'b':
+                if ("bbbbbb".equals(test)) {
+                    return 2;
+                }
+                break;
+            case 'c':
+                if ("ccccccc".equals(test)) {
+                    return 3;
+                }
+                break;
+            case 'z':
+                if ("zzzzzzzz".equals(test)) {
+                    return 4;
+                }
+                break;
+        }
+        throw new AssertionError();
+    }
+
+    @Benchmark
+    public long bigSwitchFirstChar() {
+        String test = new String(chars);
+        switch (test.charAt(0)) {
+            case 'a':
+                if ("aaaaa".equals(test)) {
+                    return 1;
+                }
+                break;
+            case 'b':
+                if ("bbbbb".equals(test)) {
+                    return 2;
+                }
+                break;
+            case 'c':
+                if ("cccccc".equals(test)) {
+                    return 3;
+                }
+                break;
+            case 'd':
+                if ("dddddd".equals(test)) {
+                    return 4;
+                }
+                break;
+            case 'e':
+                if ("eeeeeee".equals(test)) {
+                    return 5;
+                }
+                break;
+            case 'f':
+                if ("fffffff".equals(test)) {
+                    return 6;
+                }
+                break;
+            case 'i':
+                if ("iiiiiiiii".equals(test)) {
+                    return 9;
+                }
+                break;
+            case 'j':
+                if ("jjjjjjjjj".equals(test)) {
+                    return 10;
+                }
+                break;
+            case 'k':
+                if ("kkkkkkkkkk".equals(test)) {
+                    return 11;
+                }
+                break;
+            case 'l':
+                if ("llllllllll".equals(test)) {
+                    return 12;
+                }
+                break;
+            case 'm':
+                if ("mmmmmmmmmmm".equals(test)) {
+                    return 13;
+                }
+                break;
+            case 'n':
+                if ("nnnnnnnnnnn".equals(test)) {
+                    return 14;
+                }
+                break;
+            case 'o':
+                if ("oooooooooooo".equals(test)) {
+                    return 15;
+                }
+                break;
+            case 'z': // same first char
+
+                if ("zzzzzzzg".equals(test)) { // same number of characters, more
+                    // expensive String.equals()
+                    return 7;
+                }
+                if ("zhhhhhhh".equals(test)) { // same number of characters, more
+                    // expensive String.equals()
+                    return 8;
+                }
+                if ("zzzzzzzz".equals(test)) {
+                    return 16;
+                }
+                break;
+        }
+
+        throw new AssertionError();
+    }
+
 }
