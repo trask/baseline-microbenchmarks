@@ -21,13 +21,25 @@ import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.State;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-public class SystemNanoTimeBenchmark {
+@State(Scope.Thread)
+public class Volatiles {
+
+    private volatile int x;
+
+    private volatile long y;
 
     @Benchmark
-    public long systemNanoTime() {
-        return System.nanoTime();
+    public long incrementInt() {
+        return x++;
+    }
+
+    @Benchmark
+    public long incrementLong() {
+        return y++;
     }
 }

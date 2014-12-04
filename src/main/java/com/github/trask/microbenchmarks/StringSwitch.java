@@ -16,6 +16,7 @@
 package com.github.trask.microbenchmarks;
 
 import java.util.concurrent.TimeUnit;
+
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -27,15 +28,13 @@ import org.openjdk.jmh.annotations.State;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @State(Scope.Thread)
-public class StringSwitchBenchmark {
+public class StringSwitch {
 
     private char[] chars;
-    private String str;
 
     @Setup
     public void setup() throws Exception {
         chars = new char[] {'z', 'z', 'z', 'z', 'z', 'z', 'z', 'z'};
-        str = new String(chars);
     }
 
     @Benchmark
@@ -45,7 +44,7 @@ public class StringSwitchBenchmark {
     }
 
     @Benchmark
-    public long smallStringSwitchWithFreshString() {
+    public long smallSwitchWithFreshString() {
         String test = new String(chars);
         switch (test) {
             case "aaaaa":
@@ -62,25 +61,7 @@ public class StringSwitchBenchmark {
     }
 
     @Benchmark
-    public long smallIfElse() {
-        String test = new String(chars);
-        if ("aaaaa".equals(test)) {
-            return 1;
-        }
-        if ("bbbbbb".equals(test)) {
-            return 2;
-        }
-        if ("ccccccc".equals(test)) {
-            return 3;
-        }
-        if ("zzzzzzzz".equals(test)) {
-            return 4;
-        }
-        throw new AssertionError();
-    }
-
-    @Benchmark
-    public long bigStringSwitchWithFreshString() {
+    public long bigSwitchWithFreshString() {
         String test = new String(chars);
         switch (test) {
             case "aaaaa":
@@ -118,6 +99,24 @@ public class StringSwitchBenchmark {
             default:
                 throw new AssertionError();
         }
+    }
+
+    @Benchmark
+    public long smallIfElse() {
+        String test = new String(chars);
+        if ("aaaaa".equals(test)) {
+            return 1;
+        }
+        if ("bbbbbb".equals(test)) {
+            return 2;
+        }
+        if ("ccccccc".equals(test)) {
+            return 3;
+        }
+        if ("zzzzzzzz".equals(test)) {
+            return 4;
+        }
+        throw new AssertionError();
     }
 
     @Benchmark
@@ -286,8 +285,6 @@ public class StringSwitchBenchmark {
                 }
                 break;
         }
-
         throw new AssertionError();
     }
-
 }

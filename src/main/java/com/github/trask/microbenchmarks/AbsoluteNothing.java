@@ -21,18 +21,21 @@ import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.State;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-@State(Scope.Thread)
-public class VolatileIncrementBenchmark {
-
-    private volatile long x;
+public class AbsoluteNothing {
 
     @Benchmark
-    public long volatileUpdate() {
-        return x++;
+    public void returnVoid() {}
+
+    @Benchmark
+    public long returnZero() {
+        return 0;
+    }
+
+    @Benchmark
+    public Object returnNull() {
+        return null;
     }
 }

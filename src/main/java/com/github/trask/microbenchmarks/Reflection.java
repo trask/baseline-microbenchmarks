@@ -15,6 +15,11 @@
  */
 package com.github.trask.microbenchmarks;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodHandles.Lookup;
+import java.lang.invoke.MethodType;
+import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.Benchmark;
@@ -28,25 +33,38 @@ import org.openjdk.jmh.annotations.State;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @State(Scope.Thread)
-public class ThreadLocalBenchmark {
+public class Reflection {
 
-    private ThreadLocal<Object> threadLocal;
-    private Object object;
+    private Method method;
+    private MethodHandle methodHandle;
 
     @Setup
-    public void setup() {
-        threadLocal = new ThreadLocal<Object>();
-        object = new Object();
-        threadLocal.set(object);
+    public void setup() throws Exception {
+        method = String.class.getMethod("toString");
+        method.setAccessible(true);
+
+        Lookup lookup = MethodHandles.lookup();
+        MethodType mt = MethodType.methodType(String.class);
+        methodHandle = lookup.findVirtual(String.class, "toString", mt);
     }
 
     @Benchmark
-    public Object threadLocalRead() {
-        return threadLocal.get();
+    public Object baselineDirectCall() throws Throwable {
+        return "".toString();
     }
 
     @Benchmark
-    public void threadLocalUpdate() {
-        threadLocal.set(object);
+    public Object methodInvoke() throws Throwable {
+        return method.invoke("");
+    }
+
+    @Benchmark
+    public Object methodHandleInvoke() throws Throwable {
+        return methodHandle.invoke("");
+    }
+
+    @Benchmark
+    public Object methodHandleInvokeExact() throws Throwable {
+        return (String) methodHandle.invokeExact("");
     }
 }

@@ -21,13 +21,32 @@ import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-public class SystemCurrentTimeMillisBenchmark {
+@State(Scope.Thread)
+public class ThreadLocals {
+
+    private ThreadLocal<Object> threadLocal;
+    private Object object;
+
+    @Setup
+    public void setup() {
+        threadLocal = new ThreadLocal<Object>();
+        object = new Object();
+        threadLocal.set(object);
+    }
 
     @Benchmark
-    public long systemCurrentTimeMillis() {
-        return System.currentTimeMillis();
+    public Object read() {
+        return threadLocal.get();
+    }
+
+    @Benchmark
+    public void update() {
+        threadLocal.set(object);
     }
 }

@@ -15,11 +15,7 @@
  */
 package com.github.trask.microbenchmarks;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodHandles.Lookup;
-import java.lang.invoke.MethodType;
-import java.lang.reflect.Method;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.Benchmark;
@@ -30,40 +26,25 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-/**
- * @author Trask Stalnaker
- * @since 0.5
- */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @State(Scope.Thread)
-public class ReflectionBenchmark {
+public class RandomNumbers {
 
-    private Method method;
-    private MethodHandle methodHandle;
+    private Random random;
 
     @Setup
-    public void setup() throws Exception {
-        method = String.class.getMethod("toString");
-        method.setAccessible(true);
-
-        Lookup lookup = MethodHandles.lookup();
-        MethodType mt = MethodType.methodType(int.class);
-        methodHandle = lookup.findVirtual(String.class, "toString", mt);
+    public void setup() {
+        random = new Random();
     }
 
     @Benchmark
-    public Object invoke() throws Throwable {
-        return method.invoke("");
+    public float nextFloat() {
+        return random.nextFloat();
     }
 
     @Benchmark
-    public Object invokeUsingMethodHandle() throws Throwable {
-        return methodHandle.invokeExact("");
-    }
-
-    @Benchmark
-    public Object direct() throws Throwable {
-        return "".toString();
+    public double nextDouble() {
+        return random.nextDouble();
     }
 }

@@ -24,18 +24,15 @@ import org.openjdk.jmh.annotations.OutputTimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-public class NothingBenchmark {
+public class Clock {
 
     @Benchmark
-    public long baselineZero() {
-        return 0;
+    public long currentTimeMillis() {
+        return System.currentTimeMillis();
     }
 
     @Benchmark
-    public Object baselineNull() {
-        return null;
+    public long nanoTime() {
+        return System.nanoTime();
     }
-
-    @Benchmark
-    public void baselineVoid() {}
 }
