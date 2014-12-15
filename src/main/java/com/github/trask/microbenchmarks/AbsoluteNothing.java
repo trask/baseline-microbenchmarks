@@ -21,21 +21,31 @@ import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
+@State(Scope.Thread)
 public class AbsoluteNothing {
 
-    @Benchmark
-    public void returnVoid() {}
+    private long zero;
+    private Object nullObject;
+
+    @Setup
+    public void setup() {
+        zero = 0;
+        nullObject = null;
+    }
 
     @Benchmark
     public long returnZero() {
-        return 0;
+        return zero;
     }
 
     @Benchmark
     public Object returnNull() {
-        return null;
+        return nullObject;
     }
 }

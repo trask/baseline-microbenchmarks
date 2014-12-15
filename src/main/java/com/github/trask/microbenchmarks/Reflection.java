@@ -35,6 +35,18 @@ import org.openjdk.jmh.annotations.State;
 @State(Scope.Thread)
 public class Reflection {
 
+    private static final MethodHandle METHOD_HANDLE;
+
+    static {
+        Lookup lookup = MethodHandles.lookup();
+        MethodType mt = MethodType.methodType(String.class);
+        try {
+            METHOD_HANDLE = lookup.findVirtual(String.class, "toString", mt);
+        } catch (NoSuchMethodException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private Method method;
     private MethodHandle methodHandle;
 
@@ -66,5 +78,10 @@ public class Reflection {
     @Benchmark
     public Object methodHandleInvokeExact() throws Throwable {
         return (String) methodHandle.invokeExact("");
+    }
+
+    @Benchmark
+    public Object staticFinalMethodHandleInvokeExact() throws Throwable {
+        return (String) METHOD_HANDLE.invokeExact("");
     }
 }
